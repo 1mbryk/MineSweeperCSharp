@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-namespace MineSwepper
+namespace MineSweeper
 {
     class GameField
     {

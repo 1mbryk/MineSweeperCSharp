@@ -1,5 +1,5 @@
 
-namespace MineSwepper
+namespace MineSweeper
 {
     class Program
     {

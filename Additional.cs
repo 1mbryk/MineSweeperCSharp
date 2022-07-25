@@ -1,5 +1,5 @@
 using System;
-namespace MineSwepper
+namespace MineSweeper
 {
     public static class Constants
     {
