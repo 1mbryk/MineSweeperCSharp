@@ -119,7 +119,7 @@ namespace MineSweeper
         private void Print()
         {
             if (game_field == null)
-                Environment.Exit((int)ErrorCodes.NullValue);
+                Exit.WithErrorCode((int)ErrorCodes.NullValue);
             Console.Clear();
             Console.WriteLine("{0}:{1}", Constants.BOMB, amount_of_bombs);
             for (int i = 0; i < size.first; ++i)
@@ -168,7 +168,7 @@ namespace MineSweeper
         private bool IsBombOpen()
         {
             if (game_field == null)
-                Environment.Exit((int)ErrorCodes.NullValue);
+                Exit.WithErrorCode((int)ErrorCodes.NullValue);
             // IsNull();
             for (int i = 0; i < size.first; ++i)
             {
@@ -185,7 +185,7 @@ namespace MineSweeper
         {
             // IsNull();
             if (game_field == null)
-                Environment.Exit((int)ErrorCodes.NullValue);
+                Exit.WithErrorCode((int)ErrorCodes.NullValue);
             bool is_open = false;
             do
             {
@@ -197,15 +197,10 @@ namespace MineSweeper
                 chosen_square.first = Convert.ToInt32(Console.ReadLine());
                 chosen_square.second = Convert.ToInt32(Console.ReadLine());
                 if (chosen_square.first < 0 || chosen_square.second < 0)
-                    Environment.Exit((int)ErrorCodes.NegativeValue);
+                    Exit.WithErrorCode((int)ErrorCodes.NegativeValue);
 
                 is_open = game_field[chosen_square.first, chosen_square.second].is_open;
             } while (is_open);
-        }
-        private void IsNull()
-        {
-            if (game_field == null)
-                Environment.Exit((int)ErrorCodes.NullValue);
         }
 
     }

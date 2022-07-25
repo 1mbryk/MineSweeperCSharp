@@ -1,37 +1,29 @@
 using System;
 namespace MineSweeper
 {
-    public static class Constants
+    public struct Pair<T, U>
     {
-        public const string BOOM = "💥";
-        public const string BOMB = "💣";
-        public const string FLAG = "🚩";
-        public const string SQUARE = "⬜️";
-        public const string SELECTED_SQUARE = "🔳";
+        public T? first;
+        public U? second;
+        public Pair()
+        {
+            first = default;
+            second = default;
+        }
 
-        public const int EASY_BOMB_CHANCE = 5;
-        public const int MIDD_BOMB_CHANCE = 6;
-        public const int HARD_BOMB_CHANCE = 8;
-
-        // прадумаць памеры!!!
-        public static readonly Pair<uint, uint> EASY_SIZE_MAP
-        = new(7, 7);
-        public static readonly Pair<uint, uint> MIDD_SIZE_MAP
-        = new(15, 15);
-        public static readonly Pair<uint, uint> HARD_SIZE_MAP
-        = new(16, 30);
-
-        public const int EASY_MODE = 1;
-        public const int MIDD_MODE = 2;
-        public const int HARD_MODE = 3;
-
+        public Pair(T first, U second)
+        {
+            this.first = first;
+            this.second = second;
+        }
     }
-    enum ErrorCodes
+
+    public static class Exit
     {
-        WrongInput = 1,
-        WrongData,
-        NullValue,
-        NegativeValue,
+        public static void WithErrorCode(int err_code)
+        {
+            Console.WriteLine("Error: " + err_code);
+            Environment.Exit(err_code);
+        }
     }
 }
-
