@@ -10,15 +10,16 @@ namespace MineSweeper
         public const string SELECTED_SQUARE = "🔳";
         public const string QUESTION = "❓";
 
-        public const int EASY_BOMB_CHANCE = 5;
-        public const int MIDD_BOMB_CHANCE = 6;
-        public const int HARD_BOMB_CHANCE = 8;
+        public const int BOMB_CHANCE = 8;
 
-        // прадумаць памеры!!!
+        public const int EASY_BOMB_AMOUNT = 10;
+        public const int MIDD_BOMB_AMOUNT = 32;
+        public const int HARD_BOMB_AMOUNT = 60;
+
         public static readonly Pair<uint, uint> EASY_SIZE_MAP
-        = new(7, 7);
+        = new(9, 9);
         public static readonly Pair<uint, uint> MIDD_SIZE_MAP
-        = new(15, 15);
+        = new(16, 16);
         public static readonly Pair<uint, uint> HARD_SIZE_MAP
         = new(16, 30);
 
