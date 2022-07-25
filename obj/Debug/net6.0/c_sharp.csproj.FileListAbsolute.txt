@@ -1,0 +1,15 @@
+/Users/macvejpazh/Documents/c_sharp/bin/Debug/net6.0/c_sharp
+/Users/macvejpazh/Documents/c_sharp/bin/Debug/net6.0/c_sharp.deps.json
+/Users/macvejpazh/Documents/c_sharp/bin/Debug/net6.0/c_sharp.runtimeconfig.json
+/Users/macvejpazh/Documents/c_sharp/bin/Debug/net6.0/c_sharp.dll
+/Users/macvejpazh/Documents/c_sharp/bin/Debug/net6.0/c_sharp.pdb
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.csproj.AssemblyReference.cache
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.AssemblyInfoInputs.cache
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.AssemblyInfo.cs
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.csproj.CoreCompileInputs.cache
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.dll
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/refint/c_sharp.dll
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.pdb
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/c_sharp.genruntimeconfig.cache
+/Users/macvejpazh/Documents/c_sharp/obj/Debug/net6.0/ref/c_sharp.dll
