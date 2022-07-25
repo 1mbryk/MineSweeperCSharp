@@ -8,7 +8,7 @@ namespace MineSweeper
         public const string FLAG = "🚩";
         public const string SQUARE = "⬜️";
         public const string SELECTED_SQUARE = "🔳";
-        // public const string 
+        public const string QUESTION = "❓";
 
         public const int EASY_BOMB_CHANCE = 5;
         public const int MIDD_BOMB_CHANCE = 6;
@@ -27,12 +27,6 @@ namespace MineSweeper
         public const int HARD_MODE = 3;
 
     }
-    enum ErrorCodes
-    {
-        WrongInput = 1,
-        WrongData,
-        NullValue,
-        NegativeValue,
-    }
+
 }
 

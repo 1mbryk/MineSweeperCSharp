@@ -15,39 +15,43 @@ namespace MineSweeper
         //перабіць
         public bool is_bomb;
         public bool is_open;
-        public int bomb_counter;
-        //{
-        //    set
-        //    {
-        //        if (value >= 0 && value < 8)
-        //            bomb_counter = value;
-        //        else
-        //            Environment.Exit((int)ErrorCodes.WrongData);
-        //    }
-        //    get
-        //    {
-        //        return bomb_counter;
-        //    }
-        //}
-        public string? upper_layer;
-        //{
-        //    get
-        //    {
-        //        return upper_layer;
-        //    }
-        //    set
-        //    {
-        //        if (value == Constants.BOOM ||
-        //           value == Constants.FLAG ||
-        //           value == Constants.SQUARE ||
-        //           value == " " ||
-        //           value == bomb_counter.ToString())
-        //            upper_layer = value;
-        //        else
-        //            Environment.Exit((int)ErrorCodes.WrongData);
+        private int bomb_counter;
 
-        //    }
-        //} 
+        public int BombCounter
+        {
+            set
+            {
+                if (value >= 0 && value < 8)
+                    bomb_counter = value;
+                else
+                    throw new Exception("Wrong Data");
+            }
+            get
+            {
+                return bomb_counter;
+            }
+        }
+        private string upper_layer;
+        public string UpperLayer
+        {
+            get
+            {
+                return upper_layer;
+            }
+            set
+            {
+                if (value == Constants.BOOM ||
+                   value == Constants.FLAG ||
+                   value == Constants.SQUARE ||
+                   value == Constants.QUESTION ||
+                   value == " " ||
+                   value == bomb_counter.ToString())
+                    upper_layer = value;
+                else
+                    throw new Exception("Wrong Data");
+
+            }
+        }
     }
 
     class MineSwepper
@@ -79,9 +83,7 @@ namespace MineSweeper
                     bomb_chance = Constants.HARD_BOMB_CHANCE;
                     break;
                 default:
-
-                    Environment.Exit((int)ErrorCodes.WrongInput);
-                    return;
+                    throw new Exception("Wrong Input");
             }
             InitGameField();
             Game();
@@ -100,7 +102,7 @@ namespace MineSweeper
 
             Random rand = new();
             int is_bomb;
-            for (int i = 0; i < size.first; ++i)
+            for (int i = 0; i < size.first; ++i)  // перарабіць генерацыю бомбаў
             {
                 for (int j = 0; j < size.first; ++j)
                 {
@@ -115,19 +117,45 @@ namespace MineSweeper
 
                 }
             }
+            int bomb_counter = 0;
+            for (int i = 0; i < size.first; ++i)
+            {
+                for (int j = 0; j < size.first; ++j)
+                {
+                    for (int k = -1; k < 2; ++k)
+                    {
+                        for (int l = -1; l < 2; ++l)
+                        {
+                            if (i + k < 0 ||
+                               j + l < 0 ||
+                               i + k >= size.first ||
+                               j + l >= size.second ||
+                               game_field[i, j].is_bomb)
+                                continue;
+
+                            if (game_field[i + k, j + l].is_bomb)
+                                ++bomb_counter;
+
+                        }
+                    }
+                    game_field[i, j].BombCounter = bomb_counter;
+
+                }
+            }
+
         }
 
         private void Print()
         {
             if (game_field == null)
-                Exit.WithErrorCode((int)ErrorCodes.NullValue);
+                throw new Exception("Null Value");
             Console.Clear();
             Console.WriteLine("{0}:{1}", Constants.BOMB, amount_of_bombs);
             for (int i = 0; i < size.first; ++i)
             {
                 for (int j = 0; j < size.second; ++j)
                 {
-                    switch (game_field[i, j].upper_layer)
+                    switch (game_field[i, j].UpperLayer)
                     {
                         case "1":
                             Console.ForegroundColor = ConsoleColor.Blue;
@@ -152,7 +180,7 @@ namespace MineSweeper
                     if (i == chosen_square.first && j == chosen_square.second)
                         Console.Write(Constants.SELECTED_SQUARE);
                     else
-                        Console.Write(game_field[i, j].upper_layer);
+                        Console.Write(game_field[i, j].UpperLayer);
                     Console.ResetColor();
                 }
                 Console.Write('\n');
@@ -169,8 +197,8 @@ namespace MineSweeper
         private bool IsBombOpen()
         {
             if (game_field == null)
-                Exit.WithErrorCode((int)ErrorCodes.NullValue);
-            // IsNull();
+                throw new Exception("Null Value");
+
             for (int i = 0; i < size.first; ++i)
             {
                 for (int j = 0; j < size.second; ++j)
@@ -184,9 +212,9 @@ namespace MineSweeper
         }
         private void SelectSquare()
         {
-            // IsNull();
+
             if (game_field == null)
-                Exit.WithErrorCode((int)ErrorCodes.NullValue);
+                throw new Exception("Null Value");
             bool is_open = false;
             do
             {
@@ -198,12 +226,28 @@ namespace MineSweeper
                 chosen_square.first = Convert.ToInt32(Console.ReadLine());
                 chosen_square.second = Convert.ToInt32(Console.ReadLine());
                 if (chosen_square.first < 0 || chosen_square.second < 0)
-                    Exit.WithErrorCode((int)ErrorCodes.NegativeValue);
+                    throw new Exception("Negative Value");
 
                 is_open = game_field[chosen_square.first, chosen_square.second].is_open;
             } while (is_open);
         }
+        private void SquareOptions()
+        {
+            int choice = 0;
+            bool complete_flag = false;
+            while (!complete_flag)
+            {
+                Console.WriteLine("Please choose next options: ");
+                Console.WriteLine("1. Open. ");
+                Console.WriteLine("2. Defuse. ");
+                Console.WriteLine("3. Set question.");
+                Console.WriteLine("0. Change choice.");
+                Console.Write("Your input: ");
+                choice = Convert.ToInt32(Console.ReadLine());
 
+
+            }
+        }
     }
 }
 

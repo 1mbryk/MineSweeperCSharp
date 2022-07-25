@@ -5,9 +5,16 @@ namespace MineSweeper
     {
         public static void Main()
         {
-            MineSwepper game = new();
-            game.StartGame();
-
+            try
+            {
+                MineSwepper game = new();
+                game.StartGame();
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+                return;
+            }
 
         }
 

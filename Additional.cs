@@ -17,13 +17,4 @@ namespace MineSweeper
             this.second = second;
         }
     }
-
-    public static class Exit
-    {
-        public static void WithErrorCode(int err_code)
-        {
-            Console.WriteLine("Error: " + err_code);
-            Environment.Exit(err_code);
-        }
-    }
 }
