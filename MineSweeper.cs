@@ -12,6 +12,7 @@ namespace MineSweeper
             upper_layer = Constants.SQUARE;
 
         }
+        //перабіць
         public bool is_bomb;
         public bool is_open;
         public int bomb_counter;
