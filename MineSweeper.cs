@@ -365,8 +365,14 @@ namespace MineSweeper
         {
             if (game_field == null)
                 throw new Exception("Null Value func: SetQuestions");
+
             int i = chosen_square.first;
             int j = chosen_square.second;
+            if (game_field[i, j].is_defused)
+            {
+                game_field[i, j].is_defused = false;
+                ++bomb_amount;
+            }
             game_field[i, j].UpperLayer = Constants.QUESTION;
             game_field[i, j].is_marked = true;
         }
@@ -405,7 +411,8 @@ namespace MineSweeper
             {
                 for (int j = 0; j < size.second; ++j)
                 {
-                    if (!game_field[i, j].is_defused)
+                    if ((!game_field[i, j].is_defused && game_field[i, j].is_bomb) ||
+                        (game_field[i, j].is_defused && !game_field[i, j].is_bomb))
                         return false;
                 }
 
