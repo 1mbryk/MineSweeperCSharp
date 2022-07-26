@@ -5,7 +5,10 @@ namespace MineSweeper
     {
         public const string BOOM = "💥";
         public const string BOMB = "💣";
+
+        public const string DEFUSED_BOMB = "✅";
         public const string FLAG = "🚩";
+        public const string FALSE_DEFUSE = "❌";
         public const string SQUARE = "⬜️";
         public const string SELECTED_SQUARE = "🔳";
         public const string QUESTION = "❓";
@@ -26,6 +29,7 @@ namespace MineSweeper
         public const int EASY_MODE = 1;
         public const int MIDD_MODE = 2;
         public const int HARD_MODE = 3;
+
 
     }
 

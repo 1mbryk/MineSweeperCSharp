@@ -9,14 +9,14 @@ namespace MineSweeper
             is_bomb = false;
             is_open = false;
             is_marked = false;
+            is_defused = false;
             bomb_counter = 0;
             upper_layer = Constants.SQUARE;
 
         }
-        //перабіць
         public bool is_bomb;
         public bool is_open;
-
+        public bool is_defused;
         public bool is_marked;
         private int bomb_counter;
 
@@ -44,20 +44,30 @@ namespace MineSweeper
             set
             {
                 if (value == Constants.BOOM ||
-                   value == Constants.FLAG ||
-                   value == Constants.SQUARE ||
-                   value == Constants.QUESTION ||
-                   value == "  " ||
-                   value == bomb_counter.ToString() + " ")
+                    value == Constants.BOMB ||
+                    value == Constants.FLAG ||
+                    value == Constants.SQUARE ||
+                    value == Constants.QUESTION ||
+                    value == Constants.FALSE_DEFUSE ||
+                    value == Constants.DEFUSED_BOMB ||
+                    value == "  " ||
+                    value == bomb_counter.ToString() + " ")
                     upper_layer = value;
                 else
                     throw new Exception("Wrong Data func: Seter of UpperLayer");
 
             }
         }
-        public void OpenBombCounter()
+        public void OpenSquare()
         {
-            upper_layer = bomb_counter.ToString() + " ";
+            is_open = true;
+            if (bomb_counter != 0)
+                upper_layer = bomb_counter.ToString() + " ";
+            else if (!is_bomb)
+                upper_layer = "  ";
+            else
+                upper_layer = Constants.BOOM;
+
         }
     }
 
@@ -174,7 +184,7 @@ namespace MineSweeper
 
                 }
             }
-
+            SquareOptions();
         }
 
         private void Print()
@@ -183,26 +193,26 @@ namespace MineSweeper
                 throw new Exception("Null Value func: Print");
             Console.Clear();
             Console.WriteLine("{0}:{1} \t\t Current Position: ({2}:{3})",
-             Constants.BOMB, bomb_amount, chosen_square.first, chosen_square.second);
+                Constants.BOMB, bomb_amount, chosen_square.second, chosen_square.first);
             for (int i = 0; i < size.first; ++i)
             {
                 for (int j = 0; j < size.second; ++j)
                 {
                     switch (game_field[i, j].UpperLayer)
                     {
-                        case "1":
+                        case "1 ":
                             Console.ForegroundColor = ConsoleColor.Blue;
                             break;
-                        case "2":
+                        case "2 ":
                             Console.ForegroundColor = ConsoleColor.Green;
                             break;
-                        case "3":
+                        case "3 ":
                             Console.ForegroundColor = ConsoleColor.Red;
                             break;
-                        case "4":
+                        case "4 ":
                             Console.ForegroundColor = ConsoleColor.DarkMagenta;
                             break;
-                        case "5":
+                        case "5 ":
                             Console.ForegroundColor = ConsoleColor.DarkYellow;
                             break;
                         default:
@@ -223,29 +233,18 @@ namespace MineSweeper
         }
         private void Game()
         {
-            // while (!IsBombOpen())
-            while (true)
+            // while (true)
+            while (!IsBombOpen())
             {
                 Print();
                 SelectSquare();
                 SquareOptions();
-            }
-        }
-        private bool IsBombOpen()
-        {
-            if (game_field == null)
-                throw new Exception("Null Value func: IsBombOpen");
-
-            for (int i = 0; i < size.first; ++i)
-            {
-                for (int j = 0; j < size.second; ++j)
+                if (IsAllDefused())
                 {
-                    if (game_field[i, j].is_bomb == true &&
-                        game_field[i, j].is_open == true)
-                        return true;
+                    break;
                 }
             }
-            return false;
+            FinalOutput(); // temporary
         }
         private void SelectSquare()
         {
@@ -259,7 +258,7 @@ namespace MineSweeper
                 {
                     Console.WriteLine("This square is already open.");
                 }
-                Console.WriteLine("Choose square: (x;y)");
+                Console.WriteLine("Choose square: (y;x)");
                 chosen_square.first = Convert.ToInt32(Console.ReadLine());
                 chosen_square.second = Convert.ToInt32(Console.ReadLine());
                 if (chosen_square.first < 0 || chosen_square.second < 0)
@@ -306,46 +305,129 @@ namespace MineSweeper
         }
         private void OpenSquare()
         {
+
             if (game_field == null)
                 throw new Exception("Null Value func: OpenSquare");
-            int i = chosen_square.first;
-            int j = chosen_square.second;
-            if (game_field[i, j].is_bomb)
+            int x = chosen_square.first;
+            int y = chosen_square.second;
+            game_field[x, y].is_marked = false;
+            if (game_field[x, y].is_defused)
             {
-                game_field[i, j].UpperLayer = Constants.BOOM; // temporary solution
-                // Final Output
+                game_field[x, y].is_defused = false;
+                ++bomb_amount;
             }
-            else if (game_field[i, j].BombCounter != 0)
+            game_field[x, y].OpenSquare();
+            if (game_field[x, y].UpperLayer == "  ")
             {
-                game_field[i, j].OpenBombCounter();
+                OpenEmptySquare(x, y);
             }
-            else
+
+        }
+        private void OpenEmptySquare(int x, int y)
+        {
+            if (game_field == null)
+                throw new Exception("Null Value func: OpenSquare");
+            for (int k = -1; k < 2; ++k)
             {
-                game_field[i, j].UpperLayer = "  "; // temporary solution 
+                for (int l = -1; l < 2; ++l)
+                {
+                    if (x + k < 0 ||
+                        y + l < 0 ||
+                        x + k >= size.first ||
+                        y + l >= size.second ||
+                    (k == 0 && l == 0))
+                        continue;
+
+                    if (!game_field[x + k, y + l].is_bomb &&
+                        !game_field[x + k, y + l].is_open)
+                    {
+                        game_field[x + k, y + l].OpenSquare();
+                        if (game_field[x + k, y + l].UpperLayer == "  ")
+                            OpenEmptySquare(x + k, y + l);
+                    }
+
+                }
             }
-            game_field[i, j].is_open = true;
         }
         private void DefuseSquare()
         {
             if (game_field == null)
-                throw new Exception("Null Value func: OpenSquare");
+                throw new Exception("Null Value func: DefuseSquare");
             int i = chosen_square.first;
             int j = chosen_square.second;
             game_field[i, j].UpperLayer = Constants.FLAG;
             game_field[i, j].is_marked = true;
+            if (game_field[i, j].is_bomb)
+                game_field[i, j].is_defused = true;
             --bomb_amount;
         }
         private void SetQuestion()
         {
             if (game_field == null)
-                throw new Exception("Null Value func: OpenSquare");
+                throw new Exception("Null Value func: SetQuestions");
             int i = chosen_square.first;
             int j = chosen_square.second;
             game_field[i, j].UpperLayer = Constants.QUESTION;
             game_field[i, j].is_marked = true;
         }
 
+        public void FinalOutput()
+        {
+            if (game_field == null)
+                throw new Exception("Null Value func: FinalOutput");
+            for (int i = 0; i < size.first; ++i)
+            {
+                for (int j = 0; j < size.second; ++j)
+                {
+                    if (game_field[i, j].is_bomb && !game_field[i, j].is_open)
+                    {
+                        if (game_field[i, j].is_defused)
+                            game_field[i, j].UpperLayer = Constants.DEFUSED_BOMB;
+                        else
+                            game_field[i, j].UpperLayer = Constants.BOMB;
+                    }
+                    else if (game_field[i, j].is_defused)
+                        game_field[i, j].UpperLayer = Constants.FALSE_DEFUSE;
+                    else if (!game_field[i, j].is_open)
+                        game_field[i, j].OpenSquare();
+                }
+            }
+            chosen_square.first = -1;
+            chosen_square.second = -1;
+            Print();
+        }
+
+        private bool IsAllDefused()
+        {
+            if (game_field == null)
+                throw new Exception("Null Value func: IsAllDefused");
+            for (int i = 0; i < size.first; ++i)
+            {
+                for (int j = 0; j < size.second; ++j)
+                {
+                    if (!game_field[i, j].is_defused)
+                        return false;
+                }
+
+            }
+            return true;
+        }
+        private bool IsBombOpen()
+        {
+            if (game_field == null)
+                throw new Exception("Null Value func: IsBombOpen");
+
+            for (int i = 0; i < size.first; ++i)
+            {
+                for (int j = 0; j < size.second; ++j)
+                {
+                    if (game_field[i, j].is_bomb == true &&
+                        game_field[i, j].is_open == true)
+                        return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
-
-
