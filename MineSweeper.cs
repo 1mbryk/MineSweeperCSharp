@@ -77,6 +77,7 @@ namespace MineSweeper
         private Pair<uint, uint> size;
         private int bomb_amount;
         private Pair<int, int> chosen_square = new(-1, -1);
+        private int space;
 
         public void StartGame()
         {
@@ -89,14 +90,17 @@ namespace MineSweeper
                 case Constants.EASY_MODE:
                     size = Constants.EASY_SIZE_MAP;
                     bomb_amount = Constants.EASY_BOMB_AMOUNT;
+                    space = Constants.EASY_SPACE;
                     break;
                 case Constants.MIDD_MODE:
                     size = Constants.MIDD_SIZE_MAP;
                     bomb_amount = Constants.MIDD_BOMB_AMOUNT;
+                    space = Constants.MIDD_SPACE;
                     break;
                 case Constants.HARD_MODE:
                     size = Constants.HARD_SIZE_MAP;
                     bomb_amount = Constants.HARD_BOMB_AMOUNT;
+                    space = Constants.HARD_SPACE;
                     break;
                 default:
                     throw new Exception("Wrong Input func StartGame");
@@ -118,28 +122,6 @@ namespace MineSweeper
 
             Random rand = new();
             int bomb_amount_copy = bomb_amount;
-            // int is_bomb;
-            // while (bomb_amount_copy != 0)
-            // {
-            //     for (int i = 0; i < size.first && bomb_amount_copy != 0; ++i) 
-            //     {
-            //         for (int j = 0; j < size.first; ++j)
-            //         {
-            //             if (bomb_amount_copy == 0)
-            //                 break;
-            //             is_bomb = rand.Next() % Constants.BOMB_CHANCE;
-            //             if (is_bomb == 0 &&
-            //                 !game_field[i, j].is_bomb &&
-            //                 (i != chosen_square.first ||
-            //                 j != chosen_square.second))
-            // {
-            //     game_field[i, j].is_bomb = true;
-            //     --bomb_amount_copy;
-            // }
-
-            //         }
-            //     }
-            // }
             {
                 int i = 0;
                 int j = 0;
@@ -148,8 +130,8 @@ namespace MineSweeper
                     i = (int)(rand.Next() % size.first);
                     j = (int)(rand.Next() % size.second);
                     if (!game_field[i, j].is_bomb &&
-                               (i != chosen_square.first ||
-                               j != chosen_square.second))
+                        (i != chosen_square.first ||
+                         j != chosen_square.second))
                     {
                         game_field[i, j].is_bomb = true;
                         --bomb_amount_copy;
@@ -196,6 +178,8 @@ namespace MineSweeper
                 Constants.BOMB, bomb_amount, chosen_square.second, chosen_square.first);
             for (int i = 0; i < size.first; ++i)
             {
+                // if (i % space == 0)
+                //     Console.Write("\n");
                 for (int j = 0; j < size.second; ++j)
                 {
                     switch (game_field[i, j].UpperLayer)
@@ -220,12 +204,22 @@ namespace MineSweeper
                             break;
 
                     }
+
+                    // if (j % space == 0)
+                    //     Console.Write(" ");
+
                     if (i == chosen_square.first && j == chosen_square.second &&
                         !game_field[i, j].is_open &&
                         !game_field[i, j].is_marked)
                         Console.Write(Constants.SELECTED_SQUARE);
+                    else if (i == chosen_square.first && j == chosen_square.second)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        Console.Write(game_field[i, j].UpperLayer);
+                    }
                     else
                         Console.Write(game_field[i, j].UpperLayer);
+
                     Console.ResetColor();
                 }
                 Console.Write('\n');
@@ -233,7 +227,7 @@ namespace MineSweeper
         }
         private void Game()
         {
-            // while (true)
+            bool win_flag = false;
             while (!IsBombOpen())
             {
                 Print();
@@ -241,10 +235,15 @@ namespace MineSweeper
                 SquareOptions();
                 if (IsAllDefused())
                 {
+                    win_flag = true;
                     break;
                 }
             }
-            FinalOutput(); // temporary
+            FinalOutput();
+            if (win_flag)
+                Console.WriteLine("CONRATULATIONS!!!!! YOU WIN!!!!");
+            else
+                Console.WriteLine("YOU LOOSE :(");
         }
         private void SelectSquare()
         {
@@ -262,7 +261,7 @@ namespace MineSweeper
                 chosen_square.first = Convert.ToInt32(Console.ReadLine());
                 chosen_square.second = Convert.ToInt32(Console.ReadLine());
                 if (chosen_square.first < 0 || chosen_square.second < 0)
-                    throw new Exception("Negative Value");
+                    throw new Exception("Negative Value func: SelectSquare");
 
                 is_open = game_field[chosen_square.first, chosen_square.second].is_open;
             } while (is_open);
@@ -326,7 +325,7 @@ namespace MineSweeper
         private void OpenEmptySquare(int x, int y)
         {
             if (game_field == null)
-                throw new Exception("Null Value func: OpenSquare");
+                throw new Exception("Null Value func: OpenEmptySquare");
             for (int k = -1; k < 2; ++k)
             {
                 for (int l = -1; l < 2; ++l)
