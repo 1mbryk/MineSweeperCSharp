@@ -30,6 +30,11 @@ namespace MineSweeper
         public const int MIDD_MODE = 2;
         public const int HARD_MODE = 3;
 
+        public const int EASY_SPACE = 3;
+        public const int MIDD_SPACE = 4;
+        public const int HARD_SPACE = 3;
+
+
 
     }
 
