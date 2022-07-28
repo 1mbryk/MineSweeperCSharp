@@ -7,8 +7,8 @@ namespace MineSweeper
         protected int space;
 
         // coordinates
-        protected int x = -1; // width
-        protected int y = -1; // hight
+        protected int x = 0; // width
+        protected int y = 0; // hight
         protected uint hight;
         protected uint width;
 
@@ -100,22 +100,49 @@ namespace MineSweeper
 
             if (game_field == null)
                 throw new Exception("Null Value func: SelectSquare");
-            bool is_open = false;
+            System.ConsoleKeyInfo key_info;
             do
             {
-                if (is_open)
+                Print();
+                Console.WriteLine("Choose square.");
+                Console.WriteLine("With WASD or arrows");
+                key_info = Console.ReadKey(true);
+                if (key_info.Key == ConsoleKey.W ||
+                   key_info.Key == ConsoleKey.UpArrow)
                 {
-                    Console.WriteLine("This square is already open.");
+                    if (y != 0)
+                        --y;
                 }
-                Console.WriteLine("Choose square: (x;y)");
-                x = Convert.ToInt32(Console.ReadLine());
-                y = Convert.ToInt32(Console.ReadLine());
-                if (x < 0 || y < 0)
-                    throw new Exception("Negative Value func: SelectSquare");
+                else if (key_info.Key == ConsoleKey.A ||
+                   key_info.Key == ConsoleKey.LeftArrow)
+                {
+                    if (x != 0)
+                        --x;
+                }
+                else if (key_info.Key == ConsoleKey.S ||
+                   key_info.Key == ConsoleKey.DownArrow)
+                {
+                    if (y != hight - 1)
+                        ++y;
 
-                is_open = game_field[y, x].is_open;
-            } while (is_open);
-            Print();
+                }
+                else if (key_info.Key == ConsoleKey.D ||
+                   key_info.Key == ConsoleKey.RightArrow)
+                {
+                    if (x != width - 1)
+                        ++x;
+                }
+                else if (key_info.Key == ConsoleKey.Enter)
+                {
+                    if (game_field[y, x].is_open)
+                    {
+                        Console.WriteLine("This square is already open.\nPlease select other square");
+                    }
+                    else
+                        break;
+                }
+
+            } while (true);
         }
 
         protected bool IsAllDefused()
