@@ -8,7 +8,7 @@ namespace MineSweeper
             try
             {
                 MineSwepper game = new();
-                game.StartGame();
+                game.GameMenu();
             }
             catch (Exception err)
             {
