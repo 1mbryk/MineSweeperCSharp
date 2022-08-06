@@ -7,7 +7,7 @@ namespace MineSweeper
         {
             try
             {
-                MineSwepper game = new();
+                MineSweeper game = new();
                 game.GameMenu();
             }
             catch (Exception err)

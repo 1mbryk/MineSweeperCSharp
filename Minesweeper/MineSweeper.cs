@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 namespace MineSweeper
 {
-    class MineSwepper : GameFieldParametrs
+    class MineSweeper : GameFieldParametrs
     {
         public void GameMenu()
         {
@@ -34,7 +34,9 @@ namespace MineSweeper
         {
             Console.Clear();
             Console.WriteLine("Please choose dificult: ");
-            Console.WriteLine("1. Easy\n" + "2. Middle\n" + "3. Hard");
+            Console.WriteLine("1. Easy\n" +
+                              "2. Middle\n" +
+                              "3. Hard");
             int choice = Convert.ToInt32(Console.ReadLine());
 
             switch (choice)
@@ -53,7 +55,7 @@ namespace MineSweeper
                     break;
                 case Constants.HARD_MODE:
                     hight = Constants.HARD_SIZE_MAP.first;
-                    hight = Constants.HARD_SIZE_MAP.second;
+                    width = Constants.HARD_SIZE_MAP.second;
                     bomb_amount = Constants.HARD_BOMB_AMOUNT;
                     space = Constants.HARD_SPACE;
                     break;
@@ -63,7 +65,6 @@ namespace MineSweeper
             InitGameField();
             Game();
         }
-
         private void InitGameField()
         {
             game_field = new GameField[hight, width];
@@ -72,7 +73,7 @@ namespace MineSweeper
                 for (int j = 0; j < width; ++j)
                     game_field[i, j] = new();
             }
-            Print();
+            PrintAll();
             SelectSquare();
 
             Random rand = new();
@@ -128,7 +129,7 @@ namespace MineSweeper
             bool win_flag = false;
             while (!IsBombOpen())
             {
-                Print();
+                PrintAll();
                 SelectSquare();
                 SquareOptions();
                 if (IsAllDefused())
@@ -150,8 +151,10 @@ namespace MineSweeper
             bool complete_flag = false;
             while (!complete_flag)
             {
+                PrintAll();
+                Console.SetCursorPosition(0, (int)(hight + 1));
                 Console.WriteLine("Please choose next options: ");
-                Console.WriteLine("1. Open. ");
+                Console.WriteLine("1. Open.");
                 Console.WriteLine("2. Defuse. ");
                 Console.WriteLine("3. Set question.");
                 Console.WriteLine("0. Change choice.");
@@ -194,6 +197,7 @@ namespace MineSweeper
             {
                 OpenEmptySquare(x, y);
             }
+            PrintAll();
 
         }
         private void OpenEmptySquare(int x, int y)
