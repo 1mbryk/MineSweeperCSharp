@@ -28,7 +28,10 @@ namespace MineSweeper
                 for (int j = 0; j < width; ++j)
                 {
                     SetColor(j, i);
-                    if (i == y && j == x)
+                    if (i == y && j == x
+                        && !game_field[i, j].is_open)
+                        Console.Write(Constants.SELECTED_SQUARE); s
+                    else if (i == y && j == x)
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGray;
                         Console.Write(game_field[i, j].UpperLayer);
