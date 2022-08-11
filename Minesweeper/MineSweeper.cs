@@ -6,7 +6,7 @@ namespace MineSweeper
     {
         public void GameMenu()
         {
-            int choice;
+            uint choice;
             while (true)
             {
                 Console.Clear();
@@ -15,7 +15,7 @@ namespace MineSweeper
                 Console.WriteLine("1. Start Game.");
                 Console.WriteLine("2. Rules.");
                 Console.WriteLine("0. Exit.");
-                choice = Convert.ToInt32(Console.ReadLine());
+                choice = Input<uint>();
                 switch ((Menu)choice)
                 {
                     case Menu.Start:
@@ -28,7 +28,6 @@ namespace MineSweeper
                         return;
                     default:
                         Console.WriteLine("Wrong Input. Please try again.");
-                        System.Threading.Thread.Sleep(500);
                         continue;
                 }
                 break;
@@ -38,7 +37,7 @@ namespace MineSweeper
         }
         private void StartGame()
         {
-            int choice;
+            uint choice;
             while (true)
             {
                 Console.Clear();
@@ -46,7 +45,7 @@ namespace MineSweeper
                 Console.WriteLine("1. Easy\n" +
                                   "2. Middle\n" +
                                   "3. Hard");
-                choice = Convert.ToInt32(Console.ReadLine());
+                choice = Input<uint>();
                 switch ((Dificult)choice)
                 {
                     case Dificult.Easy:
@@ -156,7 +155,7 @@ namespace MineSweeper
 
         private void SquareOptions()
         {
-            int choice = 0;
+            uint choice = 0;
             bool complete_flag = false;
             while (!complete_flag)
             {
@@ -168,7 +167,7 @@ namespace MineSweeper
                 Console.WriteLine("3. Set question.");
                 Console.WriteLine("0. Change choice.");
                 Console.Write("Your input: ");
-                choice = Convert.ToInt32(Console.ReadLine());
+                choice = Input<uint>();
                 switch ((Options)choice)
                 {
                     case Options.Open:
@@ -267,6 +266,7 @@ namespace MineSweeper
         {
             T value;
             string? input_value;
+            int currentLineCursor = Console.CursorTop;
             while (true)
             {
                 try
@@ -279,8 +279,14 @@ namespace MineSweeper
                 }
                 catch
                 {
-                    Console.WriteLine("Incorrect input.");
-                    Console.WriteLine("Please Try again.");
+                    Console.WriteLine("Incorrect input. Please Try again.");
+                    System.Threading.Thread.Sleep(500);
+                    Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 2);
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write(new string(' ', Console.WindowWidth)); // "clear" current line 
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write(new string(' ', Console.WindowWidth)); // and next line
+                    Console.SetCursorPosition(0, currentLineCursor);
                     continue;
                 }
                 break;
