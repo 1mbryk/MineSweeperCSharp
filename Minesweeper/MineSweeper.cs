@@ -6,61 +6,70 @@ namespace MineSweeper
     {
         public void GameMenu()
         {
-            Console.Clear();
-            Console.WriteLine("MINESWEEPER");
-            Console.WriteLine("MENU");
-            Console.WriteLine("1. Start Game.");
-            Console.WriteLine("2. Rules.");
-            Console.WriteLine("0. Exit.");
-            int choice = Convert.ToInt32(Console.ReadLine());
-            switch (choice)
+            int choice;
+            while (true)
             {
-                case 1:
-                    StartGame();
-                    break;
-                case 2:
-                    //
-                    break;
-                case 0:
-                    return;
-                default:
-                    Console.WriteLine("Wrong Input");
-                    break;
+                Console.Clear();
+                Console.WriteLine("MINESWEEPER");
+                Console.WriteLine("MENU");
+                Console.WriteLine("1. Start Game.");
+                Console.WriteLine("2. Rules.");
+                Console.WriteLine("0. Exit.");
+                choice = Convert.ToInt32(Console.ReadLine());
+                switch ((Menu)choice)
+                {
+                    case Menu.Start:
+                        StartGame();
+                        break;
+                    case Menu.Rules:
+                        //
+                        break;
+                    case Menu.Exit:
+                        return;
+                    default:
+                        Console.WriteLine("Wrong Input. Please try again.");
+                        System.Threading.Thread.Sleep(500);
+                        continue;
+                }
+                break;
             }
 
 
         }
         private void StartGame()
         {
-            Console.Clear();
-            Console.WriteLine("Please choose dificult: ");
-            Console.WriteLine("1. Easy\n" +
-                              "2. Middle\n" +
-                              "3. Hard");
-            int choice = Convert.ToInt32(Console.ReadLine());
-
-            switch (choice)
+            int choice;
+            while (true)
             {
-                case Constants.EASY_MODE:
-                    hight = Constants.EASY_SIZE_MAP.first;
-                    width = Constants.EASY_SIZE_MAP.second;
-                    bomb_amount = Constants.EASY_BOMB_AMOUNT;
-                    space = Constants.EASY_SPACE;
-                    break;
-                case Constants.MIDD_MODE:
-                    hight = Constants.MIDD_SIZE_MAP.first;
-                    width = Constants.MIDD_SIZE_MAP.second;
-                    bomb_amount = Constants.MIDD_BOMB_AMOUNT;
-                    space = Constants.MIDD_SPACE;
-                    break;
-                case Constants.HARD_MODE:
-                    hight = Constants.HARD_SIZE_MAP.first;
-                    width = Constants.HARD_SIZE_MAP.second;
-                    bomb_amount = Constants.HARD_BOMB_AMOUNT;
-                    space = Constants.HARD_SPACE;
-                    break;
-                default:
-                    throw new Exception("Wrong Input func StartGame");
+                Console.Clear();
+                Console.WriteLine("Please choose dificult: ");
+                Console.WriteLine("1. Easy\n" +
+                                  "2. Middle\n" +
+                                  "3. Hard");
+                choice = Convert.ToInt32(Console.ReadLine());
+                switch ((Dificult)choice)
+                {
+                    case Dificult.Easy:
+                        hight = Constants.EASY_SIZE_MAP.first;
+                        width = Constants.EASY_SIZE_MAP.second;
+                        bomb_amount = Constants.EASY_BOMB_AMOUNT;
+                        break;
+                    case Dificult.Midd:
+                        hight = Constants.MIDD_SIZE_MAP.first;
+                        width = Constants.MIDD_SIZE_MAP.second;
+                        bomb_amount = Constants.MIDD_BOMB_AMOUNT;
+                        break;
+                    case Dificult.Hard:
+                        hight = Constants.HARD_SIZE_MAP.first;
+                        width = Constants.HARD_SIZE_MAP.second;
+                        bomb_amount = Constants.HARD_BOMB_AMOUNT;
+                        break;
+                    default:
+                        Console.WriteLine("Wrong input. Please try again.");
+                        System.Threading.Thread.Sleep(500);
+                        continue;
+                }
+                break;
             }
             InitGameField();
             Game();
@@ -160,17 +169,17 @@ namespace MineSweeper
                 Console.WriteLine("0. Change choice.");
                 Console.Write("Your input: ");
                 choice = Convert.ToInt32(Console.ReadLine());
-                switch (choice)
+                switch ((Options)choice)
                 {
-                    case 1:
+                    case Options.Open:
                         OpenSquare();
                         complete_flag = true;
                         break;
-                    case 2:
+                    case Options.Defuse:
                         DefuseSquare();
                         complete_flag = true;
                         break;
-                    case 3:
+                    case Options.Question:
                         SetQuestion();
                         complete_flag = true;
                         break;
@@ -187,17 +196,12 @@ namespace MineSweeper
             if (game_field == null)
                 throw new Exception("Null Value func: OpenSquare");
             game_field[y, x].is_marked = false;
-            if (game_field[y, x].is_defused)
-            {
-                game_field[y, x].is_defused = false;
-                ++bomb_amount;
-            }
+            CancelDefusing();
             game_field[y, x].OpenSquare();
             if (game_field[y, x].UpperLayer == "  ")
             {
                 OpenEmptySquare(x, y);
             }
-            PrintAll();
 
         }
         private void OpenEmptySquare(int x, int y)
@@ -230,25 +234,61 @@ namespace MineSweeper
         {
             if (game_field == null)
                 throw new Exception("Null Value func: DefuseSquare");
+            if (CancelDefusing())
+            {
+                game_field[y, x].UpperLayer = Constants.SQUARE;
+                return;
+            }
             game_field[y, x].UpperLayer = Constants.FLAG;
-            game_field[y, x].is_marked = true;
-            if (game_field[y, x].is_bomb)
-                game_field[y, x].is_defused = true;
+            game_field[y, x].is_defused = true;
             --bomb_amount;
         }
         private void SetQuestion()
         {
             if (game_field == null)
                 throw new Exception("Null Value func: SetQuestions");
-
+            CancelDefusing();
+            game_field[y, x].UpperLayer = Constants.QUESTION;
+            game_field[y, x].is_marked = true;
+        }
+        private bool CancelDefusing()
+        {
+            if (game_field == null)
+                throw new Exception("Null Value func: CanselDefusing");
             if (game_field[y, x].is_defused)
             {
                 game_field[y, x].is_defused = false;
                 ++bomb_amount;
+                return true;
             }
-            game_field[y, x].UpperLayer = Constants.QUESTION;
-            game_field[y, x].is_marked = true;
+            return false;
+        }
+        private T Input<T>()
+        {
+            T value;
+            string? input_value;
+            while (true)
+            {
+                try
+                {
+                    input_value = Console.ReadLine();
+                    if (input_value != null)
+                        value = (T)Convert.ChangeType(input_value, typeof(T));
+                    else
+                        throw new Exception();
+                }
+                catch
+                {
+                    Console.WriteLine("Incorrect input.");
+                    Console.WriteLine("Please Try again.");
+                    continue;
+                }
+                break;
+
+            }
+            return value;
         }
 
     }
+
 }

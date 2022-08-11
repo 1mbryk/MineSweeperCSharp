@@ -30,7 +30,7 @@ namespace MineSweeper
                     SetColor(j, i);
                     if (i == y && j == x
                         && !game_field[i, j].is_open)
-                        Console.Write(Constants.SELECTED_SQUARE); s
+                        Console.Write(Constants.SELECTED_SQUARE);
                     else if (i == y && j == x)
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGray;
@@ -59,10 +59,10 @@ namespace MineSweeper
             SetColor(prev_x, prev_y);
             Console.Write(game_field[prev_y, prev_x].UpperLayer);
             Console.SetCursorPosition(2 * x, y + 1);
-            if (game_field[y, x].is_open)
+            if (game_field[y, x].is_open || game_field[y, x].is_marked)
             {
-                Console.BackgroundColor = ConsoleColor.DarkGray;
                 SetColor(x, y);
+                Console.BackgroundColor = ConsoleColor.DarkGray;
                 Console.Write(game_field[y, x].UpperLayer);
             }
             else
@@ -71,6 +71,7 @@ namespace MineSweeper
 
             prev_x = x;
             prev_y = y;
+            Console.SetCursorPosition(0, (int)(hight + 2));
         }
 
         private void SetColor(int x, int y)
@@ -80,19 +81,19 @@ namespace MineSweeper
 
             switch (game_field[y, x].UpperLayer)
             {
-                case "1 ":
+                case "\x1b[1m1 \x1b[0m":
                     Console.ForegroundColor = ConsoleColor.Blue;
                     break;
-                case "2 ":
+                case "\x1b[1m2 \x1b[0m":
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
-                case "3 ":
+                case "\x1b[1m3 \x1b[0m":
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
-                case "4 ":
+                case "\x1b[1m4 \x1b[0m":
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     break;
-                case "5 ":
+                case "\x1b[1m5 \x1b[0m":
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     break;
                 default:
